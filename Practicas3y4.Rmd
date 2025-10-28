@@ -222,7 +222,11 @@ Obtén la versión _tidy_ de este conjunto de datos usando `pivot_longer`.
 Consejo: puedes eliminar el prefijo `wk` de las semanas mediante el argumento `names_prefix`. Opcionalmente puedes crear una columna `date` a partir de `date.entered`, sumando las semanas transcurridas desde la fecha de entrada en lista.
 
 ```{r}
+load('data/billboard.Rdata')
+musica<-pivot_longer(data =raw,cols =wk1:wk76, names_to = 'Semana' , values_to = 'Valores',names_prefix ='wk' )
 
+library(lubridate)
+date.entered()
 
 ```
 
