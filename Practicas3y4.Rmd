@@ -249,9 +249,12 @@ Para pasar a formato _tidy_ necesitamos realizar dos operaciones en este caso. E
 Convierte el conjunto de datos TB en _tidy_ utilizando `gather` y `separate`.
 
 ```{r}
-gather(pew_religion, income, cases, -religion, factor_key=T)
 load('data/tb.Rdata')
-tbclean<-gather(raw,key =sexo ,value =casos,m014:fu,factor_key=T )
+raw[-c(10,17)]
+tbclean<-gather(raw,key ='sexo' ,value ='casos',m014:fu,factor_key=T )
+
+separate(tbclean,sexo,c('Sex','Age'),sep=1)
+#filter(!is.na(cases))
 ```
 
 
@@ -273,8 +276,13 @@ Para obtener la versión _tidy_ primero juntamos todos los días en una variable
 Obtén la versión _tidy_ del conjunto de datos `weather` utilizando las funciones `pivot_longer` y `pivot_wider`. Además cambiaremos las columnas `year`, `month` y `dia` por una única variable `fecha`. Para que la operación `pivot_wider` no de error tendremos que eliminar los NA's cuando usemos `pivot_longer`.
 
 ```{r}
+load('data/weather.Rdata')
 
+pivot_longer(data =raw,cols =wk1:wk76, names_to = 'Semana' , values_to = 'Valores',names_prefix ='wk' )
 
+pivot_wider(data,names_from = element, values_from =d1:d31 )
+
+pivot_longer(raw,cols =element:d31 ,names_to = ,values_to = )
 ```
 
 
@@ -330,9 +338,13 @@ En nuestro estudio queremos aplicar una serie de criterios de exclusión sobre l
 * Nota: Revisar el uso de la función filter vista en clase y tener en cuenta los operadores de comparación: igual ==, distinto !=, mayor >, mayor o igual >=, menor <, menor o igual <=.
 
 ```{r }
+library(stringr)
 
-
-
+planes.f<-planes%>%
+  filter(!str_detect(str_to_lower(manufacturer),'.douglas.*'))%>%
+  #filter(str_detect(str_to_lower(manufacturer),'.douglas.*',negate=T))
+  filter(between(seats,90,210))%>%
+  mutate(manufacturer=ifelse(str_detect(str_to_lower(manufacturer),'.airbus.*'),'AIRBUS COMP',manufacturer))
 ```
 
 
@@ -341,7 +353,8 @@ En nuestro estudio queremos aplicar una serie de criterios de exclusión sobre l
 Crea un data frame denominado `flights.f` que contenga los vuelos que involucren a los aviones presentes en el data frame `planes.f`. Para ello utiliza algunas de las funciones de **XXX_join** y la variable `tailnum` que es común en ambos data frames. 
 
 ```{r }
-
+flights.f<-flights%>%
+  inner_join(planes.f,by='tailnum')
 
 ```
 
@@ -362,7 +375,10 @@ Existen variables que, a priori, no tienen demasiado interés para el estudio qu
 * En el data frame  `planes` quédate con todas las variables excepto `speed` y `type`.
 
 ```{r }
+#meter un select
 
+flights<-flights%>%
+  select(-time_hour,-starts_with('time'))
 ```
 
 ### Ejercicio 10
@@ -379,7 +395,9 @@ Incorpora una nueva variable a `flights` denominado `Full_Date` que sea de tipo 
 Utilizando las funciones `group_by`, `summarise` y `filter`, crea un data frame donde se calcule el número de vuelos (`Num_flights`), la distancia media recorrida (`Mean_distance`) y la distancia total recorrida (`Total_distance`) para cada uno de los aviones (`tailnum`) presentes en el conjunto `flights`. Descarta aquellos registros del data frame en los que la variable `tailnum` tenga un valor NA. Utiliza el operador pipe para enlazar las funciones. Almacena el data frame en una variable denominada `Distances_plane`.  
 
 ```{r }
-
+agregado<-flights%>%
+  group_by(tailnum)%>%
+  summarize(Num_flights=n(),Mean_distance=mean(distance),Total_distance=sum(distance))
 ```
 
 
