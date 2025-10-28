@@ -278,11 +278,11 @@ Obtén la versión _tidy_ del conjunto de datos `weather` utilizando las funcion
 ```{r}
 load('data/weather.Rdata')
 
-pivot_longer(data =raw,cols =wk1:wk76, names_to = 'Semana' , values_to = 'Valores',names_prefix ='wk' )
+raw_tidy <- raw %>% 
+  pivot_longer(cols =d1:d31 ,names_to ='dia' ,values_to ='valores',names_prefix = 'd', values_drop_na = TRUE) %>%
+  pivot_wider(names_from = element, values_from =valores)
 
-pivot_wider(data,names_from = element, values_from =d1:d31 )
 
-pivot_longer(raw,cols =element:d31 ,names_to = ,values_to = )
 ```
 
 
