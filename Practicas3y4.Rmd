@@ -249,7 +249,9 @@ Para pasar a formato _tidy_ necesitamos realizar dos operaciones en este caso. E
 Convierte el conjunto de datos TB en _tidy_ utilizando `gather` y `separate`.
 
 ```{r}
-
+gather(pew_religion, income, cases, -religion, factor_key=T)
+load('data/tb.Rdata')
+tbclean<-gather(raw,key =sexo ,value =casos,m014:fu,factor_key=T )
 ```
 
 
