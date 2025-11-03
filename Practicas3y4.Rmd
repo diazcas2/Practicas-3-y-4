@@ -423,8 +423,11 @@ Separa los datos _tidy_ que teníamos en el ejercicio 2 en dos tablas (data fram
 Opcionalmente se puede crear un identificador, `id`, asociado al nombre de la canción (`track`), y en la tabla de ranking solo usaremos este identificador en lugar del nombre de la canción.
 
 ```{r}
+load('data/billboard.Rdata')
 
+canciones<-raw %>% select(artist,track,time) %>% unique() %>% mutate(id = row_number())  
 
+ranking<-raw %>% left_join(canciones %>% select(track, id), by = "track") %>% select(id, week, rank)   
 
 ```
 
