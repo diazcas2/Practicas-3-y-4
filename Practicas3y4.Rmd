@@ -328,7 +328,10 @@ load("./data/VuelosNY.Rdata")
 Muestra las primeras muestras de ambos data frames para hacerte una idea de las variables que contienen. ¿Qué diferencia existe entre la información mostrada en ambos data frames?
 
 ```{r }
+head(flights)
+head(planes)
 
+#Flights muestra información del vuelo, mientras que planes son los datos del avión
 ```
 
 ### Ejercicio 6
