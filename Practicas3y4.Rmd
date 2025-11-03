@@ -342,6 +342,7 @@ En nuestro estudio queremos aplicar una serie de criterios de exclusión sobre l
 
 ```{r }
 library(stringr)
+library(tidyverse)
 
 planes.f<-planes%>%
   filter(!str_detect(str_to_lower(manufacturer),'.douglas.*'))%>%
@@ -357,7 +358,7 @@ Crea un data frame denominado `flights.f` que contenga los vuelos que involucren
 
 ```{r }
 flights.f<-flights%>%
-  inner_join(planes.f,by='tailnum')
+  inner_join(planes.f,by='tailnum') #unir dos dataframes por una columna
 
 ```
 
@@ -366,7 +367,8 @@ flights.f<-flights%>%
 Reasigna los nombres de los data frames `planes.f` y `flights.f` a los nombres originales  `planes` y `flights`.
 
 ```{r }
-
+planes<-planes.f
+flights<-flights.f
 ```
 
 
@@ -378,10 +380,11 @@ Existen variables que, a priori, no tienen demasiado interés para el estudio qu
 * En el data frame  `planes` quédate con todas las variables excepto `speed` y `type`.
 
 ```{r }
-#meter un select
 
 flights<-flights%>%
   select(-time_hour,-starts_with('time'))
+planes<-planes%>%
+  select(-speed,-type)
 ```
 
 ### Ejercicio 10
@@ -389,8 +392,10 @@ flights<-flights%>%
 Incorpora una nueva variable a `flights` denominado `Full_Date` que sea de tipo `character` que incorpore una cadena de texto de la forma `d-m-Y`. Donde `d` indica día, `m` mes e `Y` año, a partir de la información incluida en el data frame. Utiliza una función de **DPLYR** que permita conseguir este propósito. Elimina las variables originales involucradas en la creación de la nueva variable.
 
 ```{r }
+flights<-flights %>% mutate(Full_Date= paste(flights$day, flights$month, flights$year.x, sep = "-"))
+flights$Full_Date<-as.Date(flights$Full_Date)
 
-
+flights<-flights[-c(1,2,3)]
 ```
 
 ### Ejercicio 11
