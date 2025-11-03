@@ -448,8 +448,14 @@ Esto se puede hacer fácilmente con las librerías `plyr` y `dplyr`.
 En la librería _tidyr_ hay varios conjuntos de datos. **table1** es un conjunto _tidy_ pero **table5** no lo es. Realiza las operaciones necesarias para obtener **table1** a partir de **table5**. También deben coincidir los tipos de datos de las columnas. 
 
 ```{r}
+library(tidyr)
 
+table1
+table5
 
+table5_tidy<-table5 %>% separate(rate,into=c("cases", "population"))
+table5_tidy<-table5_tidy %>% mutate(year = paste(century, year, sep = ""))
+table5_tidy<-table5_tidy[-2]
 ```
 
 ## DPLYR
